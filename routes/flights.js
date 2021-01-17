@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Flight = require('../models/flight')
+const jwt = require('jsonwebtoken')
 
 // Getting all flights
 router.get('/', async (req, res)=>{
@@ -31,6 +32,12 @@ router.post('/', async (req, res)=>{
     }catch(err){
         res.status(400).json({ message: err.message })
     }
+})
+
+router.post('/login', (req, res)=>{
+    // User
+    const user = 
+    jwt.sign()
 })
 
 // Update a flight
