@@ -61,6 +61,7 @@ router.delete('/:id', getFlight, async (req, res)=>{
     }
 })
 
+// Used to retrieve specified flight then passes information to caller.
 async function getFlight(req, res, next) {
     let flight
     try{
