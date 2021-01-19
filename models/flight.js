@@ -31,9 +31,7 @@ const flightSchema = new mongoose.Schema({
     },
     eta: {
         type: Date,
-    },
-    
-
+    }
 })
 
 module.exports = mongoose.model('Flight', flightSchema)
