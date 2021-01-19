@@ -1,6 +1,9 @@
 const express = require('express')
 const router = express.Router()
+
 const Flight = require('../models/flight')
+const User = require('../models/users')
+
 const jwt = require('jsonwebtoken')
 
 // Getting all flights
@@ -34,10 +37,17 @@ router.post('/', async (req, res)=>{
     }
 })
 
-router.post('/login', (req, res)=>{
+router.post('/login', async(req, res)=>{
     // User
-    const user = 
+    const user = new User({
+        userName: req.body.userName,
+        
+    })
     jwt.sign()
+})
+
+router.post('/signup', (req, res)=>{
+
 })
 
 // Update a flight
