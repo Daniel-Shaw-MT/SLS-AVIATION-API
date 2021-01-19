@@ -3,6 +3,7 @@ const router = express.Router()
 
 const Flight = require('../models/flight')
 const User = require('../models/user')
+const Location = require('../models/location')
 
 const jwt = require('jsonwebtoken')
 
@@ -13,9 +14,8 @@ router.post('/login/:userName', getUsr, async(req, res)=>{
     const userPass = req.body.password  
 
     // Search for user
-    
+    res.send(res.user)
 
-    jwt.sign()
 })
 // Sign Up
 router.post('/signup', async(req, res)=>{
@@ -70,22 +70,29 @@ router.post('/', async (req, res)=>{
 router.patch('/:id', getFlight, async(req, res)=>{
     if(req.body.name != null){
         res.flight.name = req.body.name
-    }if(req.body.desc != null){
+    }
+    if(req.body.desc != null){
         res.flight.desc = req.body.desc
-    }if(req.body.stops != null){
+    }
+    if(req.body.stops != null){
         res.flight.stops = req.body.stops
-    }if(req.body.depLoc != null){
+    }
+    if(req.body.depLoc != null){
         res.flight.depLoc = req.body.depLoc
-    }if(req.body.arrLoc != null){
+    }
+    if(req.body.arrLoc != null){
         res.flight.arrLoc = req.body.arrLoc
-    }if(req.body.depTime != null){
+    }
+    if(req.body.depTime != null){
         res.flight.depTime = req.body.depTime
-    }if(req.body.edt != null){
+    }
+    if(req.body.edt != null){
         res.flight.edt = req.body.edt
-    }if(req.body.eta != null){
+    }
+    if(req.body.eta != null){
         res.flight.eta = req.body.eta
     }
-    
+
     try{
         const updatedFlight = await res.flight.save()
         res.json(updatedFlight)
