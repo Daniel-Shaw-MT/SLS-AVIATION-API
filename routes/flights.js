@@ -36,7 +36,7 @@ router.post('/', async (req, res)=>{
         res.status(400).json({ message: err.message })
     }
 })
-
+// Login route
 router.post('/login/:userName', getUsr, async(req, res)=>{
     // User
     const userName = req.body.userName
