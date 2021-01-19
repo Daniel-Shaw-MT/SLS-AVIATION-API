@@ -10,14 +10,30 @@ const flightSchema = new mongoose.Schema({
     desc: {
         type: String
     },
-    latitude: {
+    stops: {
         type: Number,
         required: true
     },
-    longitude: {
-        type: Number,
+    depLoc: {
+        type: String,
         required: true
-    }
+    },
+    arrLoc: {
+        type: String,
+        required: true
+    },
+    depTime: {
+        type: Date,
+        required: true
+    },
+    edt: {
+        type: Date,
+    },
+    eta: {
+        type: Date,
+    },
+    
+
 })
 
 module.exports = mongoose.model('Flight', flightSchema)
