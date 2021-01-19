@@ -37,17 +37,29 @@ router.post('/', async (req, res)=>{
     }
 })
 
-router.post('/login', async(req, res)=>{
+router.post('/login/:userName', getUsr, async(req, res)=>{
     // User
-    const user = new User({
-        userName: req.body.userName,
-        
-    })
+    const userName = req.body.userName
+    const userPass = req.body.password  
+
+    // Search for user
+    
+
     jwt.sign()
 })
-
-router.post('/signup', (req, res)=>{
-
+// Sign Up Function
+router.post('/signup', async(req, res)=>{
+    const user = new User({
+        userName: req.body.userName,
+        email: req.body.email,
+        password: req.body.password
+    })
+    try{
+        const newUser = await user.save()
+        res.status(201).json(`Created User `+ req.body.userName)
+    }catch(err){
+        res.status(400).json({ message: err.message })
+    }
 })
 
 // Update a flight
@@ -91,6 +103,22 @@ async function getFlight(req, res, next) {
         return res.status(500).json({ message: err.message })
     }
     res.flight = flight
+    next()
+}
+
+// Used to retrieve specified user and then passes info to caller.
+async function getUsr(req, res, next) {
+    let user
+    try{
+        user = await User.where('userName')
+        if(flight == null) {
+            return res.status(500).json({ message: err.message})
+        
+        }
+    }catch(err){
+        return res.status(500).json({ message: err.message })
+    }
+    res.user = user
     next()
 }
 

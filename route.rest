@@ -23,3 +23,15 @@ Content-Type: application/json
 {
     "name": ""
 }
+
+###
+
+POST http://localhost:8000/flights/signup
+Content-Type: application/json
+
+{
+    "userName": "Shrip",
+    "email": "danshawmt@hotmail.com",
+    "password": "Shaw1105"
+}
+
