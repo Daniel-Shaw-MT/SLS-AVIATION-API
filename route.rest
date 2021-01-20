@@ -8,8 +8,12 @@ Content-Type: application/json
 {
     "name": "Malta to Mitiga",
     "desc": "11:00 - 12:00",
-    "latitude": 56.7,
-    "longitude": 51.2
+    "stops": "5",
+    "depLoc": "MIA",
+    "arrLoc": "BEN",
+    "depTime": "12/01/21 9:00",
+    "edt": "12/01/21 9:00",
+    "eta": "12/01/21 12:00"
 }
 
 ###
@@ -30,14 +34,27 @@ POST http://localhost:8000/flights/signup
 Content-Type: application/json
 
 {
-    "userName": "Shrip",
+    "userName": "DanielShaw",
     "email": "danshawmt@hotmail.com",
-    "password": "Shaw1105"
+    "password": "Shaw1104"
 }
 
-POST http://localhost:3000/flights/login
+###
+
+POST http://localhost:8000/flights/login
 Content-Type: application/json
 
 {
-    "userName":
+    "userName": "Shrip",
+    "password":"Shaw1105"
+}
+
+###
+
+POST http://localhost:8000/flights/login
+Content-Type: application/json
+
+{
+    "userName": "DanielShaw",
+    "password": "Shaw1104"
 }

@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const express = require('express')
 const router = express.Router()
 
@@ -8,14 +10,17 @@ const Location = require('../models/location')
 const jwt = require('jsonwebtoken')
 
 // Login
-router.post('/login/:userName', getUsr, async(req, res)=>{
-    // User
-    const userName = req.body.userName
-    const userPass = req.body.password  
-
-    // Search for user
-    res.send(res.user)
-
+router.post('/login', getUsr, async(req, res)=>{
+    if(req.body.password == res.user.password){
+        jwt.sign(res.user.password, process.env.SECRET_TOKEN, (err, token)=>{
+            res.json({
+                token: token
+            }) 
+        })
+    }if(req.body.password != res.user.password){
+        res.status(404).json({ message: 'Incorrect Password!'})
+    }
+    
 })
 // Sign Up
 router.post('/signup', async(req, res)=>{
@@ -33,7 +38,7 @@ router.post('/signup', async(req, res)=>{
 })
 
 // Getting all flights
-router.get('/', async (req, res)=>{
+router.get('/', verifyToken, async (req, res)=>{
     try{
         const flight = await Flight.find()
         res.json(flight)
@@ -131,9 +136,10 @@ async function getFlight(req, res, next) {
 async function getUsr(req, res, next) {
     let user
     try{
-        user = await User.where('userName')
-        if(flight == null) {
-            return res.status(500).json({ message: err.message})
+        user = await User.findOne({userName: req.body.userName}).exec()
+        console.log(user)
+        if(user == null) {
+            return res.status(404).json({ message: 'User not found'})
         
         }
     }catch(err){
@@ -141,6 +147,27 @@ async function getUsr(req, res, next) {
     }
     res.user = user
     next()
+}
+
+// Formating
+// Authorization: Bearer <TOKEN>
+
+// Protect endpoint
+function verifyToken(req, res, next){
+    // Retrieve header value (auth value)
+    const bearerHeader = req.headers['authorization']
+    if(typeof bearerHeader !== 'undefined'){
+        // Split at space
+        const bearer = bearerHeader.split(' ')
+        const bearerToken = bearer[1]
+        // Set token
+        req.token = bearerToken
+        next()
+
+    }else{
+        // Forbidden
+        res.sendStatus(403)
+    }
 }
 
 module.exports = router
