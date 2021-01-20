@@ -12,7 +12,8 @@ const jwt = require('jsonwebtoken')
 // Login
 router.post('/login', getUsr, async(req, res)=>{
     if(req.body.password == res.user.password){
-        jwt.sign(res.user.password, process.env.SECRET_TOKEN, (err, token)=>{
+        const usr = res.user
+        jwt.sign({usr}, process.env.SECRET_TOKEN, (err, token)=>{
             res.json({
                 token: token
             }) 
@@ -39,12 +40,27 @@ router.post('/signup', async(req, res)=>{
 
 // Getting all flights
 router.get('/', verifyToken, async (req, res)=>{
-    try{
-        const flight = await Flight.find()
-        res.json(flight)
-    }catch(err){
-        res.status(500).json({ message: err.message })
+    jwt.verify(req.token, process.env.SECRET_TOKEN, (err, authData)=>{
+        if(err){
+            res.sendStatus(403)
+        }else{
+        (async()=>{
+            try{
+                const flight = await Flight.find()
+                res.json(flight)
+                console.log(authData)
+            
+            }catch(err){
+                res.status(500).json({ message: err.message })
+            }
+        })().catch(err => {
+            console.error(err);
+        })
+        
     }
+})
+
+    
 })
 
 // Getting a specific flight based by ID

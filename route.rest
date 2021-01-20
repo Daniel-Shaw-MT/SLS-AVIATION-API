@@ -1,5 +1,5 @@
 GET http://localhost:8000/flights
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3IiOnsiX2lkIjoiNjAwNzkyYjAzYzJiNjU2MzU0NzM2MGE0IiwidXNlck5hbWUiOiJTaHJpcCIsImVtYWlsIjoiZGFuc2hhd210QGhvdG1haWwuY29tIiwicGFzc3dvcmQiOiJTaGF3MTEwNSJ9LCJpYXQiOjE2MTExMTMwMzl9.rx1TG-YPyH9XtIS0lDDmi89M-z0qijJ2py6NxVxUbcM
 ###
 
 POST http://localhost:8000/flights
