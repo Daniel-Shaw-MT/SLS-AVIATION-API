@@ -20,14 +20,15 @@ Content-Type: application/json
 
 ###
 
-DELETE http://localhost:8000/flights/60037794c85a573e50e0e8f4
-
+DELETE http://localhost:8000/flights/6008c3eba43dbe0778fbd587
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3IiOnsiX2lkIjoiNjAwOGMzY2RhNDNkYmUwNzc4ZmJkNTg1IiwidXNlck5hbWUiOiJTaHJpcGEiLCJlbWFpbCI6ImhvZkBnbWFpbC5jb24iLCJwYXNzd29yZCI6IkxtYW8iLCJhdXRoTHZsIjowLCJfX3YiOjB9LCJpYXQiOjE2MTExODkxMTN9.lbalhynVQ6QmqbrzTtfeov2wJhmYxTSni8hAondiNqA
 ###
-PATCH http://localhost:8000/flights/60037794c85a573e50e0e8f4
+PATCH http://localhost:8000/flights/6008c3eba43dbe0778fbd587
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3IiOnsiX2lkIjoiNjAwOGMzY2RhNDNkYmUwNzc4ZmJkNTg1IiwidXNlck5hbWUiOiJTaHJpcGEiLCJlbWFpbCI6ImhvZkBnbWFpbC5jb24iLCJwYXNzd29yZCI6IkxtYW8iLCJhdXRoTHZsIjowLCJfX3YiOjB9LCJpYXQiOjE2MTExODg1MTV9.RAxqmmvKKSHCq4KiMjYHzyeYvyQJRwaCYlfL19owb0s
 Content-Type: application/json
 
 {
-    "name": ""
+    "name": "hello-world"
 }
 
 ###
@@ -47,7 +48,7 @@ POST http://localhost:8000/flights/login
 Content-Type: application/json
 
 {
-    "userName": "Shrip",
+    "userName": "Shripa",
     "password":"Lmao"
 }
 

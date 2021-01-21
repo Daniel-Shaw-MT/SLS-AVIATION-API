@@ -50,7 +50,7 @@ router.get('/', verifyToken, async (req, res) => {
     jwt.verify(req.token, process.env.SECRET_TOKEN, (err, authData) => {
         if (err) {
             res.sendStatus(403)
-        } if(authData.usr.authLvl >= 3) {
+        } else {
             (async () => {
                 try {
                     const flight = await Flight.find()
@@ -98,24 +98,23 @@ router.post('/', verifyToken, (req, res) => {
             res.sendStatus(403)
         } else {
             console.log(authData.usr)
-            console.log(authData.usr.authLvl)
-            if(authData.usr.authLvl >= 3){
-            try {
-                const newFlight = await flight.save()
-                res.status(201).json({ message: 'Saved flight!' })
+            if (authData.usr.authLvl >= 3) {
+                try {
+                    const newFlight = await flight.save()
+                    res.status(201).json({ message: 'Saved flight!' })
 
-            } catch (err) {
-                res.status(400).json({ message: err.message })
+                } catch (err) {
+                    res.status(400).json({ message: err.message })
+                }
+            } else {
+                res.status(403).json({ message: 'You dont have access to this feature!' })
             }
-        }else{
-            res.status(403).json({message: 'You dont have access to this feature!'})
-        }
         }
 
     })
 })
 // Update a flight
-router.patch('/:id', getFlight, async (req, res) => {
+router.patch('/:id', getFlight, verifyToken, async (req, res) => {
     if (req.body.name != null) {
         res.flight.name = req.body.name
     }
@@ -140,23 +139,42 @@ router.patch('/:id', getFlight, async (req, res) => {
     if (req.body.eta != null) {
         res.flight.eta = req.body.eta
     }
-
-    try {
-        const updatedFlight = await res.flight.save()
-        res.json(updatedFlight)
-    } catch (err) {
-        res.status(400).json({ message: err.message })
-    }
+    jwt.verify(req.token, process.env.SECRET_TOKEN, async (err, authData) => {
+        if (err) {
+            res.sendStatus(403)
+        } else {
+            if (authData.usr.authLvl >= 3) {
+                try {
+                    const updatedFlight = await res.flight.save()
+                    res.json(updatedFlight)
+                } catch (err) {
+                    res.status(400).json({ message: err.message })
+                }
+            } else {
+                res.status(403).json({ message: 'You dont have access to this feature!' })
+            }
+        }
+    })
 })
 
 // Deleting a flight
-router.delete('/:id', getFlight, async (req, res) => {
-    try {
-        await res.flight.remove()
-        res.json({ message: "Deleted Flight!" })
-    } catch (err) {
-        res.status(500).json({ messgae: err.message })
-    }
+router.delete('/:id', getFlight, verifyToken, async (req, res) => {
+    jwt.verify(req.token, process.env.SECRET_TOKEN, async (err, authData) => {
+        if (err) {
+            res.sendStatus(403)
+        } else {
+            if (authData.usr.authLvl >= 3) {
+                try {
+                    await res.flight.remove()
+                    res.json({ message: "Deleted Flight!" })
+                } catch (err) {
+                    res.status(500).json({ messgae: err.message })
+                }
+            } else {
+                res.status(403).json({ message: 'You dont have access to this feature!' })
+            }
+        }
+    })
 })
 
 // Used to retrieve specified flight then passes information to caller.
