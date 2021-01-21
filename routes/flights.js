@@ -47,11 +47,10 @@ router.post('/signup', async (req, res) => {
 
 // Getting all flights
 router.get('/', verifyToken, async (req, res) => {
-    jwt.verify(req.token, process.env.SECRET_TOKEN, (err, authData) => {
+    jwt.verify(req.token, process.env.SECRET_TOKEN, async(err, authData) => {
         if (err) {
             res.sendStatus(403)
         } else {
-            (async () => {
                 try {
                     const flight = await Flight.find()
                     res.json(flight)
@@ -60,9 +59,7 @@ router.get('/', verifyToken, async (req, res) => {
                 } catch (err) {
                     res.status(500).json({ message: err.message })
                 }
-            })().catch(err => {
-                console.error(err);
-            })
+            
 
         }
     })
