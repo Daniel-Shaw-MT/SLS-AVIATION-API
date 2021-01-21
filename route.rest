@@ -1,16 +1,18 @@
-GET http://localhost:8000/flights
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3IiOnsiX2lkIjoiNjAwNzkyYjAzYzJiNjU2MzU0NzM2MGE0IiwidXNlck5hbWUiOiJTaHJpcCIsImVtYWlsIjoiZGFuc2hhd210QGhvdG1haWwuY29tIiwicGFzc3dvcmQiOiJTaGF3MTEwNSJ9LCJpYXQiOjE2MTExMTMwMzl9.rx1TG-YPyH9XtIS0lDDmi89M-z0qijJ2py6NxVxUbcM
+GET http://localhost:8000/flights/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3IiOnsiX2lkIjoiNjAwODE0NjliMGFjZmY0YWQ0NmU1OWYwIiwidXNlck5hbWUiOiJTaHJpcCIsImVtYWlsIjoiaG9mQGdtYWlsLmNvbiIsInBhc3N3b3JkIjoiTG1hbyIsImF1dGhMdmwiOjAsIl9fdiI6MH0sImlhdCI6MTYxMTE1MTg5M30.cRNskv5Jwcm9-WuLnH20eTClPJI3OU0qaJFJlF8O-zM
+
 ###
 
 POST http://localhost:8000/flights
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3IiOnsiX2lkIjoiNjAwOGMwYjQzZmYyODY1NzYwNGRjMzI2IiwidXNlck5hbWUiOiJTaHJpcCIsImVtYWlsIjoiaG9mQGdtYWlsLmNvbiIsInBhc3N3b3JkIjoiTG1hbyIsImF1dGhMdmwiOjQsIl9fdiI6MH0sImlhdCI6MTYxMTE4NjQ1NX0.Ggw_isiRTNO7rA3_dzHGR19I1_Hm75xL5iw9Cup8E-4
 Content-Type: application/json
 
 {
-    "name": "Malta to Mitiga",
+    "name": "Malta to lmao",
     "desc": "11:00 - 12:00",
     "stops": "5",
     "depLoc": "MIA",
-    "arrLoc": "BEN",
+    "arrLoc": "BENINA",
     "depTime": "12/01/21 9:00",
     "edt": "12/01/21 9:00",
     "eta": "12/01/21 12:00"
@@ -34,9 +36,9 @@ POST http://localhost:8000/flights/signup
 Content-Type: application/json
 
 {
-    "userName": "DanielShaw",
-    "email": "danshawmt@hotmail.com",
-    "password": "Shaw1104"
+    "userName": "Shripa",
+    "email": "hof@gmail.con",
+    "password": "Lmao"
 }
 
 ###
@@ -46,7 +48,7 @@ Content-Type: application/json
 
 {
     "userName": "Shrip",
-    "password":"Shaw1105"
+    "password":"Lmao"
 }
 
 ###
@@ -55,6 +57,6 @@ POST http://localhost:8000/flights/login
 Content-Type: application/json
 
 {
-    "userName": "DanielShaw",
-    "password": "Shaw1104"
+    "userName": "Shrip",
+    "password": "Lmao"
 }

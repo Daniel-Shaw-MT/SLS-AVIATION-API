@@ -10,66 +10,79 @@ const Location = require('../models/location')
 const jwt = require('jsonwebtoken')
 
 // Login
-router.post('/login', getUsr, async(req, res)=>{
-    if(req.body.password == res.user.password){
+router.post('/login', getUsr, async (req, res) => {
+    if (req.body.password == res.user.password) {
         const usr = res.user
-        jwt.sign({usr}, process.env.SECRET_TOKEN, (err, token)=>{
+        jwt.sign({ usr }, process.env.SECRET_TOKEN, (err, token) => {
             res.json({
                 token: token
-            }) 
+            })
         })
-    }if(req.body.password != res.user.password){
-        res.status(404).json({ message: 'Incorrect Password!'})
+    } if (req.body.password != res.user.password) {
+        res.status(404).json({ message: 'Incorrect Password!' })
     }
-    
+
 })
 // Sign Up
-router.post('/signup', async(req, res)=>{
+router.post('/signup', async (req, res) => {
     const user = new User({
         userName: req.body.userName,
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
+        authLvl: 0,
     })
-    try{
-        const newUser = await user.save()
-        res.status(201).json(`Created User `+ req.body.userName)
-    }catch(err){
-        res.status(400).json({ message: err.message })
+    const internalU = await User.findOne({ userName: req.body.userName }).exec()
+    if (internalU != null) {
+        res.status(400).json({ message: 'Username already exists!' })
+    } else {
+        try {
+            const newUser = await user.save()
+            res.status(201).json(`Created User ` + req.body.userName)
+        } catch (err) {
+            res.status(400).json({ message: err.message })
+        }
     }
+
 })
 
 // Getting all flights
-router.get('/', verifyToken, async (req, res)=>{
-    jwt.verify(req.token, process.env.SECRET_TOKEN, (err, authData)=>{
-        if(err){
+router.get('/', verifyToken, async (req, res) => {
+    jwt.verify(req.token, process.env.SECRET_TOKEN, (err, authData) => {
+        if (err) {
             res.sendStatus(403)
-        }else{
-        (async()=>{
-            try{
-                const flight = await Flight.find()
-                res.json(flight)
-                console.log(authData)
-            
-            }catch(err){
-                res.status(500).json({ message: err.message })
-            }
-        })().catch(err => {
-            console.error(err);
-        })
-        
-    }
-})
+        } if(authData.usr.authLvl >= 3) {
+            (async () => {
+                try {
+                    const flight = await Flight.find()
+                    res.json(flight)
+                    console.log(authData)
 
-    
+                } catch (err) {
+                    res.status(500).json({ message: err.message })
+                }
+            })().catch(err => {
+                console.error(err);
+            })
+
+        }
+    })
+
+
 })
 
 // Getting a specific flight based by ID
-router.get('/:id', getFlight, (req, res)=>{
-    res.send(res.flight)
-})
+router.get('/:id', verifyToken, getFlight, (req, res) => {
+    jwt.verify(req.token, process.env.SECRET_TOKEN, (err, authData) => {
+        if (err) {
+            res.json({ message: err })
+        } else {
+            res.send(res.flight)
+        }
 
+    })
+})
 // Creating a flight
-router.post('/', async (req, res)=>{
+router.post('/', verifyToken, (req, res) => {
     const flight = new Flight({
         name: req.body.name,
         desc: req.body.desc,
@@ -80,54 +93,68 @@ router.post('/', async (req, res)=>{
         edt: req.body.edt,
         eta: req.body.eta
     })
-    try{
-        const newFlight = await flight.save()
-        res.status(201).json(newFlight)
-    }catch(err){
-        res.status(400).json({ message: err.message })
-    }
+    jwt.verify(req.token, process.env.SECRET_TOKEN, async (err, authData) => {
+        if (err) {
+            res.sendStatus(403)
+        } else {
+            console.log(authData.usr)
+            console.log(authData.usr.authLvl)
+            if(authData.usr.authLvl >= 3){
+            try {
+                const newFlight = await flight.save()
+                res.status(201).json({ message: 'Saved flight!' })
+
+            } catch (err) {
+                res.status(400).json({ message: err.message })
+            }
+        }else{
+            res.status(403).json({message: 'You dont have access to this feature!'})
+        }
+        }
+
+    })
 })
 // Update a flight
-router.patch('/:id', getFlight, async(req, res)=>{
-    if(req.body.name != null){
+router.patch('/:id', getFlight, async (req, res) => {
+    if (req.body.name != null) {
         res.flight.name = req.body.name
     }
-    if(req.body.desc != null){
+    if (req.body.desc != null) {
         res.flight.desc = req.body.desc
     }
-    if(req.body.stops != null){
+    if (req.body.stops != null) {
         res.flight.stops = req.body.stops
     }
-    if(req.body.depLoc != null){
+    if (req.body.depLoc != null) {
         res.flight.depLoc = req.body.depLoc
     }
-    if(req.body.arrLoc != null){
+    if (req.body.arrLoc != null) {
         res.flight.arrLoc = req.body.arrLoc
     }
-    if(req.body.depTime != null){
+    if (req.body.depTime != null) {
         res.flight.depTime = req.body.depTime
     }
-    if(req.body.edt != null){
+    if (req.body.edt != null) {
         res.flight.edt = req.body.edt
     }
-    if(req.body.eta != null){
+    if (req.body.eta != null) {
         res.flight.eta = req.body.eta
     }
 
-    try{
+    try {
         const updatedFlight = await res.flight.save()
         res.json(updatedFlight)
-    }catch(err){
+    } catch (err) {
         res.status(400).json({ message: err.message })
     }
 })
 
 // Deleting a flight
-router.delete('/:id', getFlight, async (req, res)=>{
-    try{
+router.delete('/:id', getFlight, async (req, res) => {
+    try {
         await res.flight.remove()
-        res.json({ message: "Deleted Flight!"})
-    }catch(err){
+        res.json({ message: "Deleted Flight!" })
+    } catch (err) {
         res.status(500).json({ messgae: err.message })
     }
 })
@@ -135,13 +162,13 @@ router.delete('/:id', getFlight, async (req, res)=>{
 // Used to retrieve specified flight then passes information to caller.
 async function getFlight(req, res, next) {
     let flight
-    try{
+    try {
         flight = await Flight.findById(req.params.id)
-        if(flight == null) {
-            return res.status(500).json({ message: err.message})
-        
+        if (flight == null) {
+            return res.status(500).json({ message: err.message })
+
         }
-    }catch(err){
+    } catch (err) {
         return res.status(500).json({ message: err.message })
     }
     res.flight = flight
@@ -151,14 +178,13 @@ async function getFlight(req, res, next) {
 // Used to retrieve specified user and then passes info to caller.
 async function getUsr(req, res, next) {
     let user
-    try{
-        user = await User.findOne({userName: req.body.userName}).exec()
-        console.log(user)
-        if(user == null) {
-            return res.status(404).json({ message: 'User not found'})
-        
+    try {
+        user = await User.findOne({ userName: req.body.userName }).exec()
+        if (user == null) {
+            return res.status(404).json({ message: 'User not found' })
+
         }
-    }catch(err){
+    } catch (err) {
         return res.status(500).json({ message: err.message })
     }
     res.user = user
@@ -169,10 +195,10 @@ async function getUsr(req, res, next) {
 // Authorization: Bearer <TOKEN>
 
 // Protect endpoint
-function verifyToken(req, res, next){
+function verifyToken(req, res, next) {
     // Retrieve header value (auth value)
     const bearerHeader = req.headers['authorization']
-    if(typeof bearerHeader !== 'undefined'){
+    if (typeof bearerHeader !== 'undefined') {
         // Split at space
         const bearer = bearerHeader.split(' ')
         const bearerToken = bearer[1]
@@ -180,7 +206,7 @@ function verifyToken(req, res, next){
         req.token = bearerToken
         next()
 
-    }else{
+    } else {
         // Forbidden
         res.sendStatus(403)
     }
