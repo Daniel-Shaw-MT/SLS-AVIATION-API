@@ -5,7 +5,6 @@ const router = express.Router()
 
 const Flight = require('../models/flight')
 const User = require('../models/user')
-const Location = require('../models/location')
 
 const jwt = require('jsonwebtoken')
 
@@ -50,11 +49,11 @@ router.get('/', verifyToken, async (req, res) => {
     jwt.verify(req.token, process.env.SECRET_TOKEN, async(err, authData) => {
         if (err) {
             res.sendStatus(403)
+            console.log(authData)
         } else {
                 try {
                     const flight = await Flight.find()
                     res.json(flight)
-                    console.log(authData)
 
                 } catch (err) {
                     res.status(500).json({ message: err.message })
@@ -94,7 +93,6 @@ router.post('/', verifyToken, (req, res) => {
         if (err) {
             res.sendStatus(403)
         } else {
-            console.log(authData.usr)
             if (authData.usr.authLvl >= 3) {
                 try {
                     const newFlight = await flight.save()
