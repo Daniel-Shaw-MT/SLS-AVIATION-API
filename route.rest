@@ -4,7 +4,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3IiOnsiX2lkIjoiN
 ###
 
 POST http://localhost:8000/flights
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3IiOnsiX2lkIjoiNjAwOGMwYjQzZmYyODY1NzYwNGRjMzI2IiwidXNlck5hbWUiOiJTaHJpcCIsImVtYWlsIjoiaG9mQGdtYWlsLmNvbiIsInBhc3N3b3JkIjoiTG1hbyIsImF1dGhMdmwiOjQsIl9fdiI6MH0sImlhdCI6MTYxMTE4NjQ1NX0.Ggw_isiRTNO7rA3_dzHGR19I1_Hm75xL5iw9Cup8E-4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3IiOnsiX2lkIjoiNjAwOGMzY2RhNDNkYmUwNzc4ZmJkNTg1IiwidXNlck5hbWUiOiJTaHJpcGEiLCJlbWFpbCI6ImhvZkBnbWFpbC5jb24iLCJwYXNzd29yZCI6IkxtYW8iLCJhdXRoTHZsIjowLCJfX3YiOjB9LCJpYXQiOjE2MTE0NDg0NzMsImV4cCI6MTYxMTQ0ODUxM30.ylytijVyrgAydSvnkTiS2yFtS3DeOIN3pvxOkDJXdRI
 Content-Type: application/json
 
 {
@@ -37,8 +37,8 @@ POST http://localhost:8000/flights/signup
 Content-Type: application/json
 
 {
-    "userName": "Shripa",
-    "email": "hof@gmail.con",
+    "userName": "Shlsrkasdaaacaaiapga7aaa",
+    "email": "danshawmt@hotmail.com",
     "password": "Lmao"
 }
 
@@ -48,7 +48,7 @@ POST http://localhost:8000/flights/login
 Content-Type: application/json
 
 {
-    "userName": "Shripa",
+    "userName": "Shlsrkasdaacaaiapga7aaa",
     "password":"Lmao"
 }
 
@@ -60,4 +60,12 @@ Content-Type: application/json
 {
     "userName": "Shrip",
     "password": "Lmao"
+}
+###
+
+POST http://localhost:8000/flights/verify
+Content-Type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYwMGYyNzA4YzY0MmMzNWVhOGVkZGY4MSIsInVzZXJOYW1lIjoiU2hsc3JrYXNkYWFhY2FhaWFwZ2E3YWFhIiwiZW1haWwiOiJkYW5zaGF3bXRAaG90bWFpbC5jb20iLCJwYXNzd29yZCI6IkxtYW8iLCJhdXRoTHZsIjowLCJhY3RpdmUiOmZhbHNlLCJfX3YiOjB9LCJpYXQiOjE2MTE2MDU3Njh9.lP2JcKLPO7QYrVsvPmLnAa5M2u39hpMWPZmhJr1LQqU"
 }

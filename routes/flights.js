@@ -7,16 +7,25 @@ const Flight = require('../models/flight')
 const User = require('../models/user')
 
 const jwt = require('jsonwebtoken')
+const bodyParser = require('body-parser');
+const nodemailer = require('nodemailer');
+
+
 
 // Login
 router.post('/login', getUsr, async (req, res) => {
+    const internalU = await User.findOne({ userName: req.body.userName }).exec()
     if (req.body.password == res.user.password) {
         const usr = res.user
-        jwt.sign({ usr }, process.env.SECRET_TOKEN, (err, token) => {
+    if(usr.active != true){
+        res.status(403).json({ message: 'Verify your email!'})
+    }else{
+        jwt.sign({ usr }, process.env.SECRET_TOKEN, {expiresIn: "24h"}, (err, token) => {
             res.json({
                 token: token
             })
         })
+    }
     } if (req.body.password != res.user.password) {
         res.status(404).json({ message: 'Incorrect Password!' })
     }
@@ -29,13 +38,37 @@ router.post('/signup', async (req, res) => {
         email: req.body.email,
         password: req.body.password,
         authLvl: 0,
+        active: false,
     })
     const internalU = await User.findOne({ userName: req.body.userName }).exec()
     if (internalU != null) {
         res.status(400).json({ message: 'Username already exists!' })
-    } else {
+    }else {
         try {
             const newUser = await user.save()
+            jwt.sign({ user }, process.env.SECRET_TOKEN, (err, verifyCode)=>{
+                var transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                      user: 'slsauthservice@gmail.com',
+                      pass: process.env.EMAIL_PASS
+                    }
+                  });
+                  var mailOptions = {
+                    from: 'SLS AVIATION AUTHENTICATION',
+                    to: req.body.email,
+                    subject: 'AUTH SERVICE',
+                    text: verifyCode
+                  };
+                  
+                  transporter.sendMail(mailOptions, function(error, info){
+                    if (error) {
+                      console.log(error);
+                    } else {
+                      console.log('Email sent: ' + info.response);
+                    }
+                  });
+            })
             res.status(201).json(`Created User ` + req.body.userName)
         } catch (err) {
             res.status(400).json({ message: err.message })
@@ -43,7 +76,28 @@ router.post('/signup', async (req, res) => {
     }
 
 })
+router.post('/verify', async(req, res)=>{
+    jwt.verify(req.body.token, process.env.SECRET_TOKEN, async(err, authData) => {
+        console.log(authData)
+        if(err){
+            res.status(403).json({
+                message: 'Forbidden!'
+            })
+        }
+        else{
 
+            (async () => {
+                verUsr = await User.findById(authData._id)
+                console.log(verUsr)
+                
+            })().catch(err)
+            
+            res.status(200).json({
+            message: 'Email Verified!'
+            })
+        }
+    })
+})
 // Getting all flights
 router.get('/', verifyToken, async (req, res) => {
     jwt.verify(req.token, process.env.SECRET_TOKEN, async(err, authData) => {
